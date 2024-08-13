@@ -10,9 +10,9 @@ app.use(express.static(__dirname + "/public"));
 
 app.get("/api/Database.json", (req, res) => {
   fs.readFile("Database.json", (err, jsondata) => {
-    let disc = [];
-    if (!err) disc = JSON.parse(jsondata);
-    res.status(200).json(disc);
+    let products = [];
+    if (!err) products = JSON.parse(jsondata);
+    res.status(200).json(products);
   });
 });
 
@@ -25,26 +25,26 @@ function getEntry(req, res) {
   fs.readFile(
     "Database.json",
     function (err, data) {
-      let songs = [];
-      if (!err) songs = JSON.parse(data);
-      res.status(200).json(songs.filter((p) => p.id === id));
+      let products = [];
+      if (!err) products = JSON.parse(data);
+      res.status(200).json(products.filter((p) => p.id === id));
     },
   );
 }
 
 function addEntry(req, res) {
   console.log(req.body)
-  const { id, product, price, pricekilo } = req.body;
-  const newSong = { id: parseInt(id), product, price: parseFloat(price), pricekilo: parseFloat(pricekilo) };
+  const { id, product, price, pricekilo, discount } = req.body;
+  const newProduct = { id: parseInt(id), product, price: parseFloat(price), pricekilo: parseFloat(pricekilo), discount: parseInt(discount)};
   fs.readFile(
     "Database.json",
     function (err, data) {
-      let song = [];
-      if (!err) song = JSON.parse(data);
-      song.push(newSong);
+      let product = [];
+      if (!err) product = JSON.parse(data);
+      product.push(newProduct);
       fs.writeFile(
         "Database.json",
-        JSON.stringify(song),
+        JSON.stringify(product),
         function (err) {
           if (err) {
             res.status(200).json(`Error adding id: ${id}`);
@@ -58,22 +58,22 @@ function addEntry(req, res) {
 }
 
 function updateEntry(req, res) {
-  const { id, product, price, pricekilo } = req.body;
-  const aSong = { id: parseInt(id), product, price: parseFloat(price), pricekilo: parseFloat(pricekilo) };
+  const { id, product, price, pricekilo, discount } = req.body;
+  const updatedProduct = { id: parseInt(id), product, price: parseFloat(price), pricekilo: parseFloat(pricekilo), discount: parseInt(discount) };
   fs.readFile(
     "Database.json",
     function (err, data) {
-      let song = [];
-      if (!err) song = JSON.parse(data);
-      const anIndex = song.findIndex((p) => p.id === aSong.id);
+      let product = [];
+      if (!err) product = JSON.parse(data);
+      const anIndex = product.findIndex((p) => p.id === updatedProduct.id);
       if (anIndex < 0) {
         res.status(200).json(`Cannot find ID: ${id}`);
         return;
       }
-      song[anIndex] = aSong;
+      product[anIndex] = updatedProduct;
       fs.writeFile(
         "Database.json",
-        JSON.stringify(song),
+        JSON.stringify(product),
         function (err) {
           if (err) {
             res.status(200).json(`Error updating id: ${id}`);
@@ -92,18 +92,18 @@ function removeEntry(req, res) {
   fs.readFile(
     "Database.json",
     function (err, data) {
-      let song = [];
-      if (!err) song = JSON.parse(data);
+      let product = [];
+      if (!err) product = JSON.parse(data);
       console.log(id)
-      const anIndex = song.findIndex((p) => p.id === id);
+      const anIndex = product.findIndex((p) => p.id === id);
       if (anIndex < 0) {
         res.status(200).json(`Cannot find ID: ${id}`);
         return;
       }
-      song.splice(anIndex, 1);
+      product.splice(anIndex, 1);
       fs.writeFile(
         "Database.json",
-        JSON.stringify(song),
+        JSON.stringify(product),
         function (err) {
           if (err) {
             res.status(200).json(`Error deleting id: ${id}`);

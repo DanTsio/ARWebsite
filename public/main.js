@@ -30,7 +30,8 @@ function displayTable(page, data) {
         <th>ID</th> 
         <th>Product</th> 
         <th>Price</th> 
-        <th>Price Per Kilo</th> 
+        <th>Price Per Kilo</th>
+        <th>% Discount</th>
     </tr> 
     `; 
 
@@ -41,10 +42,12 @@ function displayTable(page, data) {
         const productCell = row.insertCell(1); 
         const priceCell = row.insertCell(2);
         const pricePerKiloCell = row.insertCell(3);
+        const discountCell = row.insertCell(4);
         idCell.innerHTML = item.id; 
         productCell.innerHTML = item.product; 
         priceCell.innerHTML = item.price;
         pricePerKiloCell.innerHTML = item.pricekilo;
+        discountCell.innerHTML = item.discount;
     }); 
 
     // Update pagination 
@@ -77,7 +80,7 @@ function loadProducts(Entries) {
     DatabaseContainer.addEventListener("click", selectEntry);
 
     let Table = `<table class="TableStyle"><tr><th>ID</th>
-        <th>Product</th><th>Price</th><th>Price Per Kilo</th></tr>`
+        <th>Product</th><th>Price</th><th>Price Per Kilo</th><th>% Discount</th></tr>`
 
     for (let entry  of Entries) {
         Table += `<tr>
@@ -85,6 +88,7 @@ function loadProducts(Entries) {
             <td>${entry.product}</td>
             <td>${entry.price}</td>
             <td>${entry.pricekilo}</td>
+            <td>${entry.discount}</td>
             </tr>`;
     }
     Table += "</table>";
@@ -109,7 +113,8 @@ function getFormData() {
         id: document.querySelector("#linkForm [name='id']").value,
         product: document.querySelector("#linkForm [name='product']").value,
         price: document.querySelector("#linkForm [name='price']").value,
-        pricekilo: document.querySelector("#linkForm [name='pricekilo']").value
+        pricekilo: document.querySelector("#linkForm [name='pricekilo']").value,
+        discount: document.querySelector("#linkForm [name='discount']").value
     };
     return JSON.stringify(aSong);
 }
